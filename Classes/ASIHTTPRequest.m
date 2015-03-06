@@ -250,6 +250,7 @@ static NSOperationQueue *sharedQueue = nil;
 
 
 @implementation ASIHTTPRequest
+@synthesize enableNetworkActivity;
 
 #pragma mark init / dealloc
 
@@ -279,6 +280,7 @@ static NSOperationQueue *sharedQueue = nil;
 - (id)initWithURL:(NSURL *)newURL
 {
 	self = [self init];
+    [self setEnableNetworkActivity:YES];
 	[self setRequestMethod:@"GET"];
 
 	[self setRunLoopMode:NSDefaultRunLoopMode];
@@ -3707,7 +3709,7 @@ static NSOperationQueue *sharedQueue = nil;
 
 		[connectionsLock lock];
 		runningRequestCount++;
-		if (shouldUpdateNetworkActivityIndicator) {
+		if (shouldUpdateNetworkActivityIndicator && self.enableNetworkActivity) {
 			[[self class] showNetworkActivityIndicator];
 		}
 		[connectionsLock unlock];
@@ -3728,7 +3730,7 @@ static NSOperationQueue *sharedQueue = nil;
 
 		[connectionsLock lock];
 		runningRequestCount--;
-		if (shouldUpdateNetworkActivityIndicator && runningRequestCount == 0) {
+		if (shouldUpdateNetworkActivityIndicator && runningRequestCount == 0 && self.enableNetworkActivity) {
 			// This call will wait half a second before turning off the indicator
 			// This can prevent flicker when you have a single request finish and then immediately start another request
 			// We run this on the main thread because we have no guarantee this thread will have a runloop in 0.5 seconds time

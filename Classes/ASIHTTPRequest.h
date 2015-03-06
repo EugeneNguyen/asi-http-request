@@ -540,6 +540,8 @@ typedef void (^ASIDataBlock)(NSData *data);
 	#endif
 }
 
+@property (nonatomic, assign) BOOL enableNetworkActivity;
+
 #pragma mark init / dealloc
 
 // Should be an HTTP or HTTPS url, may include username and password if appropriate
